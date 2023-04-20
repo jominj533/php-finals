@@ -4,9 +4,9 @@
 
         private static $_table = "cities";
         
-        public static function findAll () {            $table = self::$_table;
+        public static function findAll () {            
+            $table = self::$_table;
             $sql = "SELECT * FROM {$table}";
-
             $conn = get_connection();
             $cities = $conn->query ($sql) ->fetchAll(PDO::FETCH_OBJ);
             $conn = null;
@@ -28,13 +28,22 @@
         public static function create ($package) {
             $table = self::$_table;
             $sql = "INSERT INTO {$table} (
-                owner_name
+                name
+                country
+                province
+                population
             ) VALUES (
-                :owner_name
+                :name
+                :country
+                :province
+                :population
             )";
             $conn = get_connection();
             $stmt = $conn->prepare($sql);
-            $stmt->bindParam(":owner_name",$package["owner_name"], PDO::PARAM_STR);
+            $stmt->bindParam(":name",$package["name"], PDO::PARAM_STR);
+            $stmt->bindParam(":country",$package["country"], PDO::PARAM_STR);
+            $stmt->bindParam(":province",$package["province"], PDO::PARAM_STR);
+            $stmt->bindParam(":population",$package["population"], PDO::PARAM_INT);
             $stmt->execute();
             $conn = null;
         }
@@ -42,13 +51,18 @@
         public static function update ($package) {
             $table = self::$_table;
             $sql = "UPDATE {$table} SET 
-                owner_name = :owner_name
+                name = :name
+                country =:country
+                province = :province
+                population = :population
             WHERE id = id";
 
             $conn = get_connection();
             $stmt = $conn->prepare($sql);
-            $stmt->bindParam(":id",$package["id"], PDO::PARAM_INT);
-            $stmt->bindParam(":owner_name",$package["owner_name"], PDO::PARAM_STR);
+            $stmt->bindParam(":name",$package["name"], PDO::PARAM_STR);
+            $stmt->bindParam(":country",$package["country"], PDO::PARAM_STR);
+            $stmt->bindParam(":province",$package["province"], PDO::PARAM_STR);
+            $stmt->bindParam(":population",$package["population"], PDO::PARAM_INT);
             $stmt->execute();
             $conn = null;
         }
